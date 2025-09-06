@@ -1,0 +1,131 @@
+{% extends "base.html" %}
+
+{% block title %}About - Coconut Leaf Disease Predictor{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-8 mx-auto">
+        <h1 class="text-center mb-5">About Coconut Leaf Disease Predictor</h1>
+        
+        <!-- Introduction -->
+        <div class="card mb-4">
+            <div class="card-body">
+                <h3 class="card-title text-success">
+                    <i class="fas fa-leaf"></i> Our Mission
+                </h3>
+                <p class="card-text">
+                    Coconut palm trees are vital to tropical agriculture and economy. Early detection of leaf diseases 
+                    is crucial for maintaining healthy coconut plantations and ensuring sustainable yields. Our AI-powered 
+                    system provides farmers and agricultural professionals with an easy-to-use tool for rapid disease 
+                    identification.
+                </p>
+            </div>
+        </div>
+
+        <!-- Technology -->
+        <div class="card mb-4">
+            <div class="card-body">
+                <h3 class="card-title text-primary">
+                    <i class="fas fa-cogs"></i> Technology Behind the System
+                </h3>
+                <p class="card-text">
+                    Our prediction system is built using state-of-the-art deep learning technology:
+                </p>
+                <ul>
+                    <li><strong>Convolutional Neural Networks (CNN):</strong> Advanced image recognition algorithms</li>
+                    <li><strong>TensorFlow/Keras:</strong> Industry-standard machine learning framework</li>
+                    <li><strong>Transfer Learning:</strong> Leveraging pre-trained models for better accuracy</li>
+                    <li><strong>Image Preprocessing:</strong> Automated image enhancement and standardization</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Diseases Detected -->
+        <div class="card mb-4">
+            <div class="card-body">
+                <h3 class="card-title text-warning">
+                    <i class="fas fa-bug"></i> Diseases We Can Detect
+                </h3>
+                <p class="card-text">Our system is trained to identify the following coconut leaf conditions:</p>
+                <div class="row">
+                    <div class="col-md-6">
+                        <ul>
+                            <li><span class="badge bg-success">Healthy Leaves</span></li>
+                            <li><span class="badge bg-danger">Red Palm Weevil Damage</span></li>
+                            <li><span class="badge bg-warning">Rhinoceros Beetle Damage</span></li>
+                        </ul>
+                    </div>
+                    <div class="col-md-6">
+                        <ul>
+                            <li><span class="badge bg-info">Leaf Spot Disease</span></li>
+                            <li><span class="badge bg-dark">Bud Rot</span></li>
+                            <li><span class="badge bg-secondary">Black Spot</span></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- How to Use -->
+        <div class="card mb-4">
+            <div class="card-body">
+                <h3 class="card-title text-info">
+                    <i class="fas fa-question-circle"></i> How to Use the System
+                </h3>
+                <ol>
+                    <li><strong>Image Quality:</strong> Ensure your photo is clear and well-lit</li>
+                    <li><strong>Focus on Leaves:</strong> Capture the affected leaf area prominently</li>
+                    <li><strong>File Format:</strong> Upload images in PNG, JPG, JPEG, or GIF format</li>
+                    <li><strong>Size Limit:</strong> Maximum file size is 16MB</li>
+                    <li><strong>Registration:</strong> Create an account to track your prediction history</li>
+                </ol>
+            </div>
+        </div>
+
+        <!-- Accuracy and Limitations -->
+        <div class="card mb-4">
+            <div class="card-body">
+                <h3 class="card-title text-danger">
+                    <i class="fas fa-exclamation-triangle"></i> Important Notes
+                </h3>
+                <div class="alert alert-warning">
+                    <strong>Disclaimer:</strong> This system is designed to assist in disease identification and should 
+                    not replace professional agricultural consultation. Always consult with agricultural experts for 
+                    confirmed diagnosis and treatment recommendations.
+                </div>
+                <p>
+                    <strong>Accuracy:</strong> Our model has been trained on a comprehensive dataset and achieves 
+                    high accuracy in controlled conditions. However, environmental factors, image quality, and 
+                    lighting conditions can affect prediction results.
+                </p>
+            </div>
+        </div>
+
+        <!-- Contact -->
+        <div class="card">
+            <div class="card-body text-center">
+                <h3 class="card-title text-success">
+                    <i class="fas fa-envelope"></i> Get in Touch
+                </h3>
+                <p class="card-text">
+                    Have questions or suggestions? We'd love to hear from you!
+                </p>
+                <div class="row">
+                    <div class="col-md-4">
+                        <i class="fas fa-phone text-primary"></i>
+                        <p>+1 (555) 123-4567</p>
+                    </div>
+                    <div class="col-md-4">
+                        <i class="fas fa-envelope text-primary"></i>
+                        <p>info@coconutpredictor.com</p>
+                    </div>
+                    <div class="col-md-4">
+                        <i class="fas fa-map-marker-alt text-primary"></i>
+                        <p>Agricultural Research Center</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
