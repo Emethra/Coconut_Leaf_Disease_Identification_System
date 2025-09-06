@@ -1,0 +1,247 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Dashboard - Coconut Leaf Disease Predictor{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1><i class="fas fa-user-shield"></i> Admin Dashboard</h1>
+    {% if is_admin %}
+    <div>
+        <div class="btn-group me-2">
+            <a href="{{ url_for('admin_export_data', data_type='users') }}" class="btn btn-outline-success">
+                <i class="fas fa-file-csv"></i> Export Users
+            </a>
+            <a href="{{ url_for('admin_export_data', data_type='predictions') }}" class="btn btn-outline-primary">
+                <i class="fas fa-file-csv"></i> Export Predictions
+            </a>
+        </div>
+        <a href="{{ url_for('admin_logout') }}" class="btn btn-outline-danger">
+            <i class="fas fa-sign-out-alt"></i> Logout
+        </a>
+    </div>
+    {% else %}
+    <a href="{{ url_for('admin_logout') }}" class="btn btn-outline-danger">
+        <i class="fas fa-sign-out-alt"></i> Logout
+    </a>
+    {% endif %}
+</div>
+
+{% if is_admin %}
+<div class="card mb-4">
+    <div class="card-header bg-danger text-white">
+        <h4><i class="fas fa-users"></i> User List</h4>
+    </div>
+    <div class="card-body">
+        {% if users %}
+        <div class="table-responsive">
+            <table class="table table-striped table-hover">
+                <thead class="table-dark">
+                    <tr>
+                        <th>#</th>
+                        <th>Username</th>
+                        <th>Email</th>
+                        <th>Registered At</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user in users %}
+                    <tr>
+                        <td>{{ loop.index }}</td>
+                        <td>{{ user[1] }}</td>
+                        <td>{{ user[2] }}</td>
+                        <td>{{ user[3] }}</td>
+                        <td>
+                            <form method="POST" action="{{ url_for('admin_delete_user', user_id=user[0]) }}" style="display:inline-block;">
+                                <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to delete this user?');">
+                                    <i class="fas fa-trash"></i> Delete
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="text-center py-5">
+            <i class="fas fa-users fa-4x text-muted mb-3"></i>
+            <h5 class="text-muted">No users found</h5>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Prediction Statistics -->
+<div class="card mb-4">
+    <div class="card-header bg-info text-white">
+        <h4><i class="fas fa-chart-pie"></i> Prediction Statistics</h4>
+    </div>
+    <div class="card-body">
+        {% if statistics %}
+        <div class="row">
+            {% for stat in statistics %}
+            <div class="col-md-4 mb-3">
+                <div class="card h-100">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">{{ stat[0] }}</h5>
+                        <p class="card-text">
+                            Count: <strong>{{ stat[1] }}</strong><br>
+                            Avg. Confidence: <strong>{{ "%.2f"|format(stat[2] * 100) }}%</strong>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <p class="text-muted text-center">No prediction statistics available</p>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Recent Predictions -->
+<div class="card mb-4">
+    <div class="card-header bg-success text-white">
+        <h4><i class="fas fa-history"></i> Recent Predictions</h4>
+    </div>
+    <div class="card-body">
+        {% if predictions %}
+        <div class="table-responsive">
+            <table class="table table-striped table-hover">
+                <thead class="table-dark">
+                    <tr>
+                        <th>#</th>
+                        <th>User</th>
+                        <th>Image</th>
+                        <th>Prediction</th>
+                        <th>Confidence</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for pred in predictions %}
+                    <tr>
+                        <td>{{ loop.index }}</td>
+                        <td>{{ pred[1] or 'Guest' }}</td>
+                        <td>{{ pred[2] }}</td>
+                        <td>
+                            <span class="badge {% if pred[3] == 'Healthy' %}bg-success{% else %}bg-warning{% endif %}">
+                                {{ pred[3] }}
+                            </span>
+                        </td>
+                        <td>{{ "%.2f"|format(pred[4] * 100) }}%</td>
+                        <td>{{ pred[5] }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <p class="text-muted text-center">No predictions found</p>
+        {% endif %}
+    </div>
+</div>
+{% else %}
+<div class="card mb-4">
+    <div class="card-header bg-primary text-white">
+        <h4>Action Required</h4>
+    </div>
+    <div class="card-body">
+        {% set disease = session.get('last_prediction', 'Healthy') %}
+        <p class="lead">The analysis indicates: <strong>{{ disease }}</strong></p>
+        {% if disease == 'Healthy' %}
+            <h5>No Action Needed</h5>
+            <ul>
+                <li>Your coconut leaf is healthy. No disease detected.</li>
+                <li><strong>Prevention Tips:</strong>
+                    <ul>
+                        <li>Maintain regular watering and fertilization schedules.</li>
+                        <li>Inspect leaves weekly for any signs of discoloration or spots.</li>
+                        <li>Keep the area around the plant clean and free of debris.</li>
+                        <li>Prune dead or damaged leaves to promote healthy growth.</li>
+                    </ul>
+                </li>
+                <li>Continue good agricultural practices and stay vigilant for any changes.</li>
+            </ul>
+            <p class="mt-3">If you notice any unusual symptoms in the future, use this app to analyze and get recommendations.</p>
+        {% elif disease == 'leaf_spot' %}
+            <h5>Leaf Spot Management</h5>
+            <ol>
+                <li><strong>Inspect and Identify:</strong><br>
+                    Examine all coconut leaves for small, round, brown or black spots. Mark or note affected areas.
+                </li>
+                <li><strong>Remove Affected Leaves:</strong><br>
+                    Carefully prune and remove all leaves showing symptoms. Place removed leaves in a sealed bag or container.
+                </li>
+                <li><strong>Disinfect Tools:</strong><br>
+                    Clean and disinfect all pruning tools with bleach or alcohol after use to prevent spreading the disease.
+                </li>
+                <li><strong>Apply Fungicide:</strong><br>
+                    Use a recommended fungicide (e.g., copper-based or mancozeb). Follow the product label for dosage and safety instructions. Wear gloves and protective clothing.
+                </li>
+                <li><strong>Repeat Treatment:</strong><br>
+                    Reapply fungicide as directed (usually every 7-14 days) until symptoms subside.
+                </li>
+                <li><strong>Improve Air Circulation:</strong><br>
+                    Ensure proper spacing between coconut trees. Prune excess foliage to allow airflow.
+                </li>
+                <li><strong>Watering Practices:</strong><br>
+                    Water plants at the base, not on the leaves. Avoid watering in the evening to reduce leaf wetness overnight.
+                </li>
+                <li><strong>Field Hygiene:</strong><br>
+                    Remove plant debris, weeds, and fallen leaves from around the trees. Dispose of them away from the plantation.
+                </li>
+                <li><strong>Monitor and Record:</strong><br>
+                    Check plants weekly for new symptoms. Keep a log of treatments and observations.
+                </li>
+                <li><strong>Consult Experts:</strong><br>
+                    If symptoms persist, worsen, or spread rapidly, contact your local agricultural extension officer for further advice and possible resistant varieties.
+                </li>
+            </ol>
+            <div class="alert alert-warning mt-4" role="alert">
+                <strong>Important:</strong> This prediction is based on AI analysis and should be used as a preliminary assessment. For confirmed diagnosis and treatment, please consult with a qualified agricultural professional or extension officer.
+            </div>
+        {% elif disease == 'leaf_blast' %}
+            <h5>Leaf Blast Management</h5>
+            <ul>
+                <li><strong>Immediate Actions:</strong>
+                    <ul>
+                        <li>Remove and destroy all infected leaves and plant debris immediately.</li>
+                        <li>Isolate affected plants if possible.</li>
+                    </ul>
+                </li>
+                <li><strong>Treatment:</strong>
+                    <ul>
+                        <li>Apply a fungicide specifically recommended for leaf blast (such as tricyclazole or carbendazim).</li>
+                        <li>Follow dosage and safety instructions carefully.</li>
+                    </ul>
+                </li>
+                <li><strong>Prevention:</strong>
+                    <ul>
+                        <li>Improve field drainage to avoid waterlogging.</li>
+                        <li>Maintain field hygiene by removing dead leaves and weeds.</li>
+                        <li>Reduce humidity around plants by proper spacing and pruning.</li>
+                    </ul>
+                </li>
+                <li><strong>Follow-Up:</strong>
+                    <ul>
+                        <li>Monitor for rapid spread and new symptoms daily.</li>
+                        <li>Seek expert advice if the disease spreads quickly or does not respond to treatment.</li>
+                    </ul>
+                </li>
+            </ul>
+            <p class="mt-3">Leaf blast can be severe. Contact your local agricultural extension officer for urgent support and consider switching to resistant coconut varieties if outbreaks are frequent.</p>
+        {% else %}
+            <h5>General Advice</h5>
+            <ul>
+                <li>Monitor your plants regularly for any unusual symptoms.</li>
+                <li>Consult agricultural experts for unidentified or persistent symptoms.</li>
+                <li>Maintain good field hygiene and proper care practices.</li>
+            </ul>
+            <p class="mt-3">For more information, contact your local agricultural extension office.</p>
+        {% endif %}
+    </div>
+</div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,128 @@
+{% if prediction_result %}
+    {% set disease = prediction_result %}
+{% else %}
+    {% set disease = session.get('last_prediction', 'Healthy') %}
+{% endif %}
+
+<div class="card mb-4">
+    <div class="card-header bg-info text-white">
+        <h4><i class="fas fa-clipboard-list"></i> Recommendations</h4>
+    </div>
+    <div class="card-body">
+        <p class="lead">The analysis indicates: <strong>{{ disease }}</strong></p>
+        
+        {% if disease == 'Healthy' %}
+            <h5>Good News - Your Plant is Healthy!</h5>
+            <ol class="mt-3">
+                <li><strong>Regular Maintenance:</strong><br>
+                    Continue with proper plant care routines.
+                </li>
+                <li><strong>Monitoring:</strong><br>
+                    Inspect leaves weekly for any changes.
+                </li>
+                <li><strong>Prevention:</strong><br>
+                    Maintain good agricultural practices:
+                    <ul>
+                        <li>Regular watering schedule</li>
+                        <li>Proper fertilization</li>
+                        <li>Good air circulation</li>
+                        <li>Clean surroundings</li>
+                    </ul>
+                </li>
+            </ol>
+
+        {% elif disease == 'leaf_spot' %}
+            <h5>Leaf Spot Management Plan</h5>
+            <ol class="mt-3">
+                <li><strong>Inspect and Identify:</strong><br>
+                    Examine all coconut leaves for small, round, brown or black spots. Mark or note affected areas.
+                </li>
+                <li><strong>Remove Affected Leaves:</strong><br>
+                    Carefully prune and remove all leaves showing symptoms. Place removed leaves in a sealed bag or container.
+                </li>
+                <li><strong>Disinfect Tools:</strong><br>
+                    Clean and disinfect all pruning tools with bleach or alcohol after use to prevent spreading the disease.
+                </li>
+                <li><strong>Apply Fungicide:</strong><br>
+                    Use a recommended fungicide (e.g., copper-based or mancozeb). Follow the product label for dosage and safety instructions. Wear gloves and protective clothing.
+                </li>
+                <li><strong>Repeat Treatment:</strong><br>
+                    Reapply fungicide as directed (usually every 7-14 days) until symptoms subside.
+                </li>
+                <li><strong>Improve Air Circulation:</strong><br>
+                    Ensure proper spacing between coconut trees. Prune excess foliage to allow airflow.
+                </li>
+                <li><strong>Watering Practices:</strong><br>
+                    Water plants at the base, not on the leaves. Avoid watering in the evening to reduce leaf wetness overnight.
+                </li>
+                <li><strong>Field Hygiene:</strong><br>
+                    Remove plant debris, weeds, and fallen leaves from around the trees. Dispose of them away from the plantation.
+                </li>
+                <li><strong>Monitor and Record:</strong><br>
+                    Check plants weekly for new symptoms. Keep a log of treatments and observations.
+                </li>
+                <li><strong>Consult Experts:</strong><br>
+                    If symptoms persist, worsen, or spread rapidly, contact your local agricultural extension officer for further advice and possible resistant varieties.
+                </li>
+            </ol>
+
+        {% elif disease == 'leaf_blast' %}
+            <h5>Leaf Blast Management Plan</h5>
+            <ol class="mt-3">
+                <li><strong>Emergency Response:</strong><br>
+                    This is a serious condition requiring immediate action.
+                </li>
+                <li><strong>Quarantine:</strong><br>
+                    Isolate affected plants to prevent disease spread.
+                </li>
+                <li><strong>Remove Infected Material:</strong><br>
+                    Carefully remove and destroy all infected leaves and nearby plant debris.
+                    <ul>
+                        <li>Use clean, sharp tools</li>
+                        <li>Double-bag infected material</li>
+                        <li>Dispose properly - do not compost</li>
+                    </ul>
+                </li>
+                <li><strong>Apply Fungicide Treatment:</strong><br>
+                    Use specialized fungicides for leaf blast:
+                    <ul>
+                        <li>Tricyclazole-based products</li>
+                        <li>Carbendazim formulations</li>
+                        <li>Follow strict application guidelines</li>
+                    </ul>
+                </li>
+                <li><strong>Environmental Management:</strong><br>
+                    <ul>
+                        <li>Improve drainage immediately</li>
+                        <li>Reduce canopy density</li>
+                        <li>Increase plant spacing</li>
+                    </ul>
+                </li>
+                <li><strong>Daily Monitoring:</strong><br>
+                    Check all plants daily for:
+                    <ul>
+                        <li>New lesions</li>
+                        <li>Spreading symptoms</li>
+                        <li>Treatment effectiveness</li>
+                    </ul>
+                </li>
+                <li><strong>Expert Consultation:</strong><br>
+                    Contact agricultural extension services immediately.
+                </li>
+            </ol>
+        {% endif %}
+
+        <div class="alert alert-warning mt-4" role="alert">
+            <strong>Important:</strong> This prediction is based on AI analysis and should be used as a preliminary assessment. For confirmed diagnosis and treatment, please consult with a qualified agricultural professional or extension officer.
+        </div>
+        
+        <div class="alert alert-info mt-3" role="alert">
+            <h6><i class="fas fa-phone-alt"></i> Need Help?</h6>
+            <ul class="mb-0">
+                <li>Contact your local agricultural extension office</li>
+                <li>Document all symptoms with photos</li>
+                <li>Keep records of all treatments applied</li>
+            </ul>
+        </div>
+    </div>
+</div>

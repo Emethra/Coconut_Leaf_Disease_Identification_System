@@ -1,0 +1,116 @@
+{% extends "base.html" %}
+
+{% block title %}Home - Coconut Leaf Disease Predictor{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<div class="hero-section text-center py-5 mb-5 bg-gradient-success rounded">
+    <div class="container">
+        <h1 class="display-4 text-white mb-4">
+            <i class="fas fa-leaf"></i> Coconut Leaf Disease Predictor
+        </h1>
+        <p class="lead text-white mb-4">
+            Advanced AI-powered system for early detection and diagnosis of coconut leaf diseases
+        </p>
+        <div class="row">
+            <div class="col-md-6 mx-auto">
+                <a href="{{ url_for('predict') }}" class="btn btn-light btn-lg me-3">
+                    <i class="fas fa-camera"></i> Start Prediction
+                </a>
+                <a href="{{ url_for('about') }}" class="btn btn-outline-light btn-lg">
+                    <i class="fas fa-info-circle"></i> Learn More
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Features Section -->
+<div class="row">
+    <div class="col-md-4 mb-4">
+        <div class="card h-100 text-center">
+            <div class="card-body">
+                <div class="feature-icon mb-3">
+                    <i class="fas fa-brain fa-3x text-success"></i>
+                </div>
+                <h4 class="card-title">AI-Powered Detection</h4>
+                <p class="card-text">
+                    Our advanced machine learning model can accurately identify various coconut leaf diseases 
+                    with high precision and reliability.
+                </p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4 mb-4">
+        <div class="card h-100 text-center">
+            <div class="card-body">
+                <div class="feature-icon mb-3">
+                    <i class="fas fa-clock fa-3x text-primary"></i>
+                </div>
+                <h4 class="card-title">Instant Results</h4>
+                <p class="card-text">
+                    Get immediate diagnosis results within seconds of uploading your coconut leaf image. 
+                    No waiting time required.
+                </p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4 mb-4">
+        <div class="card h-100 text-center">
+            <div class="card-body">
+                <div class="feature-icon mb-3">
+                    <i class="fas fa-chart-line fa-3x text-warning"></i>
+                </div>
+                <h4 class="card-title">Track History</h4>
+                <p class="card-text">
+                    Register to keep track of all your predictions and monitor the health of your coconut plants 
+                    over time.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- How It Works Section -->
+<div class="mt-5 pt-5">
+    <h2 class="text-center mb-4">How It Works</h2>
+    <div class="row">
+        <div class="col-md-3 text-center mb-4">
+            <div class="step-circle mx-auto mb-3">1</div>
+            <h5>Upload Image</h5>
+            <p>Take a clear photo of the coconut leaf and upload it to our system.</p>
+        </div>
+        <div class="col-md-3 text-center mb-4">
+            <div class="step-circle mx-auto mb-3">2</div>
+            <h5>AI Analysis</h5>
+            <p>Our trained model analyzes the image for disease patterns and symptoms.</p>
+        </div>
+        <div class="col-md-3 text-center mb-4">
+            <div class="step-circle mx-auto mb-3">3</div>
+            <h5>Get Results</h5>
+            <p>Receive instant diagnosis with confidence score and disease identification.</p>
+        </div>
+        <div class="col-md-3 text-center mb-4">
+            <div class="step-circle mx-auto mb-3">4</div>
+            <h5>Take Action</h5>
+            <p>Use the results to take appropriate measures for plant health management.</p>
+        </div>
+    </div>
+</div>
+
+<!-- CTA Section -->
+<div class="text-center mt-5 pt-4 border-top">
+    <h3>Ready to Get Started?</h3>
+    <p class="text-muted mb-4">Start predicting coconut leaf diseases now or create an account to track your predictions.</p>
+    <a href="{{ url_for('predict') }}" class="btn btn-success btn-lg me-3">
+        <i class="fas fa-upload"></i> Upload & Predict
+    </a>
+    {% if not session.user_id %}
+    <a href="{{ url_for('register') }}" class="btn btn-outline-success btn-lg">
+        <i class="fas fa-user-plus"></i> Create Account
+    </a>
+    {% endif %}
+</div>
+{% endblock %}

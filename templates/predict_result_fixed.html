@@ -1,0 +1,168 @@
+{% extends "base.html" %}
+
+{% block title %}Prediction Results - Coconut Leaf Disease Predictor{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-10 col-lg-8">
+        <!-- Results Card -->
+        <div class="card shadow mb-4">
+            <div class="card-header bg-success text-white text-center">
+                <h3><i class="fas fa-chart-pie"></i> Prediction Results</h3>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <!-- Uploaded Image -->
+                    <div class="col-md-6 mb-3">
+                        <h5 class="text-center">Uploaded Image</h5>
+                        <div class="text-center">
+                            <img src="data:image/jpeg;base64,{{ image_data }}" 
+                                 alt="Uploaded Image" class="img-fluid rounded shadow"
+                                 style="max-height: 300px;">
+                        </div>
+                    </div>
+                    
+                    <!-- Prediction Results -->
+                    <div class="col-md-6">
+                        <h5 class="text-center mb-4">Analysis Results</h5>
+                        
+                        <!-- Disease Status -->
+                        <div class="result-box p-3 rounded mb-3 text-center
+                            {% if prediction == 'Healthy' %}
+                                bg-success text-white
+                            {% else %}
+                                bg-warning text-dark
+                            {% endif %}">
+                            <h4 class="mb-2">
+                                {% if prediction == 'Healthy' %}
+                                    <i class="fas fa-check-circle"></i>
+                                {% else %}
+                                    <i class="fas fa-exclamation-triangle"></i>
+                                {% endif %}
+                                {{ prediction }}
+                            </h4>
+                        </div>
+                        
+                        <!-- Confidence Score -->
+                        <div class="mb-3">
+                            <label class="form-label"><strong>Confidence Score:</strong></label>
+                            <div class="progress mb-2" style="height: 25px;">
+                                <div class="progress-bar 
+                                    {% set conf_percent = (confidence * 100) %}
+                                    {% if conf_percent >= 80 %}bg-success
+                                    {% elif conf_percent >= 60 %}bg-warning
+                                    {% else %}bg-danger
+                                    {% endif %}" 
+                                    role="progressbar" 
+                                    style="width: {{ conf_percent|round(1) }}%">
+                                    {{ conf_percent|round(1) }}%
+                                </div>
+                            </div>
+                            <small class="text-muted">
+                                {% if confidence >= 0.8 %}
+                                    High confidence result
+                                {% elif confidence >= 0.6 %}
+                                    Moderate confidence result
+                                {% else %}
+                                    Low confidence - consider retaking image
+                                {% endif %}
+                            </small>
+                        </div>
+                        
+                        <!-- Timestamp -->
+                        <div class="text-muted text-center">
+                            <small><i class="fas fa-clock"></i> Analyzed just now</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Recommendations -->
+        <div class="card mb-4">
+            <div class="card-header bg-info text-white">
+                <h5><i class="fas fa-clipboard-list"></i> Recommendations</h5>
+            </div>
+            <div class="card-body">
+                {% if prediction == 'Healthy' %}
+                    <div class="alert alert-success">
+                        <h6><i class="fas fa-thumbs-up"></i> Great News!</h6>
+                        <p>Your coconut leaf appears to be healthy. Continue with regular care and monitoring.</p>
+                        <ul>
+                            <li>Maintain proper irrigation schedule</li>
+                            <li>Ensure adequate nutrition</li>
+                            <li>Regular inspection for early disease detection</li>
+                            <li>Proper pruning and sanitation practices</li>
+                        </ul>
+                    </div>
+                {% else %}
+                    <div class="alert alert-warning">
+                        <h6><i class="fas fa-exclamation-circle"></i> Action Required</h6>
+                        <p>The analysis indicates: <strong>{{ prediction }}</strong></p>
+                        
+                        {% if 'Red Palm Weevil' in prediction %}
+                            <ul>
+                                <li>Inspect for bore holes and frass around the trunk</li>
+                                <li>Apply appropriate insecticide treatments</li>
+                                <li>Remove and destroy affected plant parts</li>
+                                <li>Consult with agricultural extension officer</li>
+                            </ul>
+                        {% elif 'Rhinoceros Beetle' in prediction %}
+                            <ul>
+                                <li>Look for V-shaped cuts on fronds</li>
+                                <li>Use pheromone traps for adult beetles</li>
+                                <li>Clean breeding sites around the palm</li>
+                                <li>Apply preventive treatments</li>
+                            </ul>
+                        {% elif 'Leaf Spot' in prediction %}
+                            <ul>
+                                <li>Improve air circulation around plants</li>
+                                <li>Apply appropriate fungicide treatment</li>
+                                <li>Remove affected leaves and destroy them</li>
+                                <li>Avoid overhead irrigation</li>
+                            </ul>
+                        {% elif 'Bud Rot' in prediction %}
+                            <ul>
+                                <li>Urgent attention required - this is serious</li>
+                                <li>Improve drainage around the palm</li>
+                                <li>Apply copper-based fungicides</li>
+                                <li>Contact agricultural expert immediately</li>
+                            </ul>
+                        {% elif 'Black Spot' in prediction %}
+                            <ul>
+                                <li>Remove affected leaves and burn them</li>
+                                <li>Apply systemic fungicide treatment</li>
+                                <li>Improve plant nutrition</li>
+                                <li>Monitor closely for spread</li>
+                            </ul>
+                        {% endif %}
+                    </div>
+                {% endif %}
+                
+                <div class="alert alert-info">
+                    <strong><i class="fas fa-info-circle"></i> Important:</strong> 
+                    This prediction is based on AI analysis and should be used as a preliminary assessment. 
+                    For confirmed diagnosis and treatment, please consult with a qualified agricultural professional 
+                    or extension officer.
+                </div>
+            </div>
+        </div>
+        
+        <!-- Action Buttons -->
+        <div class="text-center">
+            <a href="{{ url_for('predict') }}" class="btn btn-primary btn-lg me-3">
+                <i class="fas fa-camera"></i> Analyze Another Image
+            </a>
+            {% if session.user_id %}
+                <a href="{{ url_for('dashboard') }}" class="btn btn-success btn-lg">
+                    <i class="fas fa-chart-line"></i> View Dashboard
+                </a>
+            {% else %}
+                <a href="{{ url_for('register') }}" class="btn btn-outline-success btn-lg">
+                    <i class="fas fa-user-plus"></i> Save Results (Register)
+                </a>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,103 @@
+{% extends "base.html" %}
+
+{% block title %}Predict Disease - Coconut Leaf Disease Predictor{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white text-center">
+                <h3><i class="fas fa-camera"></i> Upload Coconut Leaf Image</h3>
+            </div>
+            <div class="card-body">
+                <!-- Upload Form -->
+                <form method="POST" enctype="multipart/form-data" id="uploadForm">
+                    <div class="mb-4">
+                        <label for="file" class="form-label">Select Image File</label>
+                        <input type="file" class="form-control" id="file" name="file" 
+                               accept="image/*" required onchange="previewImage(this)">
+                        <div class="form-text">
+                            Supported formats: PNG, JPG, JPEG, GIF (Max size: 16MB)
+                        </div>
+                    </div>
+                    
+                    <!-- Image Preview -->
+                    <div id="imagePreview" class="mb-3 text-center" style="display: none;">
+                        <img id="preview" src="" alt="Preview" class="img-fluid rounded" 
+                             style="max-height: 300px;">
+                    </div>
+                    
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary btn-lg" id="submitBtn">
+                            <i class="fas fa-magic"></i> Analyze Image
+                        </button>
+                    </div>
+                </form>
+                
+                <!-- Loading Spinner -->
+                <div id="loadingSpinner" class="text-center mt-3" style="display: none;">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Analyzing...</span>
+                    </div>
+                    <p class="mt-2">Analyzing your image, please wait...</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Instructions -->
+        <div class="card mt-4">
+            <div class="card-body">
+                <h5 class="card-title text-success">
+                    <i class="fas fa-lightbulb"></i> Tips for Best Results
+                </h5>
+                <div class="row">
+                    <div class="col-md-6">
+                        <ul class="list-unstyled">
+                            <li><i class="fas fa-check text-success"></i> Use good lighting</li>
+                            <li><i class="fas fa-check text-success"></i> Focus on the affected area</li>
+                            <li><i class="fas fa-check text-success"></i> Avoid blurry images</li>
+                        </ul>
+                    </div>
+                    <div class="col-md-6">
+                        <ul class="list-unstyled">
+                            <li><i class="fas fa-check text-success"></i> Fill the frame with the leaf</li>
+                            <li><i class="fas fa-check text-success"></i> Capture clear symptoms</li>
+                            <li><i class="fas fa-check text-success"></i> Use high resolution</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        {% if not session.user_id %}
+        <!-- Registration Prompt -->
+        <div class="alert alert-info mt-3">
+            <i class="fas fa-info-circle"></i> 
+            <strong>Want to save your predictions?</strong> 
+            <a href="{{ url_for('register') }}" class="alert-link">Create a free account</a> 
+            to track your prediction history and monitor plant health over time.
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+function previewImage(input) {
+    if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            document.getElementById('preview').src = e.target.result;
+            document.getElementById('imagePreview').style.display = 'block';
+        }
+        reader.readAsDataURL(input.files[0]);
+    }
+}
+
+document.getElementById('uploadForm').addEventListener('submit', function() {
+    document.getElementById('submitBtn').disabled = true;
+    document.getElementById('loadingSpinner').style.display = 'block';
+});
+</script>
+{% endblock %}

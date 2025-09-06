@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+
+{% block title %}Register - Coconut Leaf Disease Predictor{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6 col-lg-5">
+        <div class="card shadow">
+            <div class="card-header bg-success text-white text-center">
+                <h3><i class="fas fa-user-plus"></i> Create Account</h3>
+            </div>
+            <div class="card-body">
+                <form method="POST">
+                    <div class="mb-3">
+                        <label for="username" class="form-label">Username</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-user"></i></span>
+                            <input type="text" class="form-control" id="username" name="username" required>
+                        </div>
+                        <div class="form-text">Choose a unique username for your account.</div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email Address</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+                            <input type="email" class="form-control" id="email" name="email" required>
+                        </div>
+                        <div class="form-text">We'll never share your email with anyone else.</div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="password" class="form-label">Password</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                            <input type="password" class="form-control" id="password" name="password" required>
+                        </div>
+                        <div class="form-text">Use a strong password with at least 8 characters.</div>
+                    </div>
+                    
+                    <div class="mb-3 form-check">
+                        <input type="checkbox" class="form-check-input" id="terms" required>
+                        <label class="form-check-label" for="terms">
+                            I agree to the <a href="#" class="text-success">Terms of Service</a> and 
+                            <a href="#" class="text-success">Privacy Policy</a>
+                        </label>
+                    </div>
+                    
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-success">
+                            <i class="fas fa-user-plus"></i> Create Account
+                        </button>
+                    </div>
+                </form>
+            </div>
+            <div class="card-footer text-center">
+                <p class="mb-0">Already have an account? 
+                    <a href="{{ url_for('login') }}" class="text-success">Login here</a>
+                </p>
+            </div>
+        </div>
+        
+        <!-- Benefits of Registration -->
+        <div class="card mt-3">
+            <div class="card-body">
+                <h5 class="card-title text-success">
+                    <i class="fas fa-star"></i> Benefits of Registration
+                </h5>
+                <ul class="list-unstyled">
+                    <li><i class="fas fa-check text-success"></i> Save and track all your predictions</li>
+                    <li><i class="fas fa-check text-success"></i> Access prediction history dashboard</li>
+                    <li><i class="fas fa-check text-success"></i> Monitor plant health over time</li>
+                    <li><i class="fas fa-check text-success"></i> Get personalized recommendations</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

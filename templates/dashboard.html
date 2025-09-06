@@ -1,0 +1,212 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - Coconut Leaf Disease Predictor{% endblock %}
+
+{% block content %}
+<!-- Dashboard Header -->
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1><i class="fas fa-chart-line"></i> Your Dashboard</h1>
+    <div>
+        <a href="{{ url_for('predict') }}" class="btn btn-success">
+            <i class="fas fa-camera"></i> New Prediction
+        </a>
+    </div>
+</div>
+
+<!-- Statistics Cards -->
+<div class="row mb-4">
+    <div class="col-md-3 mb-3">
+        <div class="card bg-primary text-white">
+            <div class="card-body text-center">
+                <i class="fas fa-chart-bar fa-2x mb-2"></i>
+                <h4>{{ predictions|length }}</h4>
+                <p class="mb-0">Total Predictions</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 mb-3">
+        <div class="card bg-success text-white">
+            <div class="card-body text-center">
+                <i class="fas fa-leaf fa-2x mb-2"></i>
+                <h4>{{ predictions|selectattr('1', 'equalto', 'Healthy')|list|length }}</h4>
+                <p class="mb-0">Healthy Leaves</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 mb-3">
+        <div class="card bg-warning text-white">
+            <div class="card-body text-center">
+                <i class="fas fa-bug fa-2x mb-2"></i>
+                <h4>{{ predictions|length - predictions|selectattr('1', 'equalto', 'Healthy')|list|length }}</h4>
+                <p class="mb-0">Diseased Detected</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 mb-3">
+        <div class="card bg-info text-white">
+            <div class="card-body text-center">
+                <i class="fas fa-clock fa-2x mb-2"></i>
+                <h4>{{ predictions[0][3][:10] if predictions else 'N/A' }}</h4>
+                <p class="mb-0">Last Prediction</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Predictions History -->
+<div class="card">
+    <div class="card-header">
+        <h4><i class="fas fa-history"></i> Prediction History</h4>
+    </div>
+    <div class="card-body">
+        {% if predictions %}
+            <div class="table-responsive">
+                <table class="table table-striped table-hover">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>#</th>
+                            <th>Image Name</th>
+                            <th>Prediction</th>
+                            <th>Confidence</th>
+                            <th>Date & Time</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for prediction in predictions %}
+                        <tr>
+                            <td>{{ loop.index }}</td>
+                            <td>
+                                <i class="fas fa-image text-muted"></i>
+                                {{ prediction[0] }}
+                            </td>
+                            <td>
+                                <span class="badge 
+                                    {% if prediction[1] == 'Healthy' %}
+                                        bg-success
+                                    {% else %}
+                                        bg-warning
+                                    {% endif %}">
+                                    {{ prediction[1] }}
+                                </span>
+                            </td>
+                            <td>
+                                {% set conf_percent = (prediction[2] * 100)|round(1) %}
+                                <div class="progress" style="height: 20px; width: 100px;">
+                                    <div class="progress-bar 
+                                        {% if conf_percent >= 80 %}bg-success
+                                        {% elif conf_percent >= 60 %}bg-warning
+                                        {% else %}bg-danger
+                                        {% endif %}" 
+                                        style="width: {{ conf_percent }}%">
+                                        {{ conf_percent }}%
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <small>{{ prediction[3] }}</small>
+                            </td>
+                            <td>
+                                {% if prediction[1] == 'Healthy' %}
+                                    <span class="text-success">
+                                        <i class="fas fa-check-circle"></i> Good
+                                    </span>
+                                {% else %}
+                                    <span class="text-warning">
+                                        <i class="fas fa-exclamation-triangle"></i> Attention
+                                    </span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <div class="text-center py-5">
+                <i class="fas fa-chart-line fa-4x text-muted mb-3"></i>
+                <h5 class="text-muted">No predictions yet</h5>
+                <p class="text-muted">Start by uploading your first coconut leaf image for analysis.</p>
+                <a href="{{ url_for('predict') }}" class="btn btn-primary">
+                    <i class="fas fa-camera"></i> Make Your First Prediction
+                </a>
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Health Trends (if we have predictions) -->
+{% if predictions %}
+<div class="card mt-4">
+    <div class="card-header">
+        <h4><i class="fas fa-chart-area"></i> Health Overview</h4>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-6">
+                <canvas id="healthChart" width="400" height="200"></canvas>
+            </div>
+            <div class="col-md-6">
+                <h5>Quick Summary</h5>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        Healthy Predictions
+                        <span class="badge bg-success rounded-pill">
+                            {{ predictions|selectattr('1', 'equalto', 'Healthy')|list|length }}
+                        </span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        Disease Detections
+                        <span class="badge bg-warning rounded-pill">
+                            {{ predictions|length - predictions|selectattr('1', 'equalto', 'Healthy')|list|length }}
+                        </span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        Average Confidence
+                        <span class="badge bg-info rounded-pill">
+                            {{ ((predictions|map(attribute=2)|sum / predictions|length) * 100)|round(1) }}%
+                        </span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock %}
+
+{% block scripts %}
+{% if predictions %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    // Health Chart
+    const ctx = document.getElementById('healthChart').getContext('2d');
+    const healthyCount = {{ predictions|selectattr('1', 'equalto', 'Healthy')|list|length }};
+    const diseasedCount = {{ predictions|length - predictions|selectattr('1', 'equalto', 'Healthy')|list|length }};
+    
+    new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: ['Healthy', 'Diseased'],
+            datasets: [{
+                data: [healthyCount, diseasedCount],
+                backgroundColor: ['#28a745', '#ffc107'],
+                borderWidth: 2
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'bottom'
+                },
+                title: {
+                    display: true,
+                    text: 'Health Distribution'
+                }
+            }
+        }
+    });
+</script>
+{% endif %}
+{% endblock %}
